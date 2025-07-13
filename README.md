@@ -98,9 +98,52 @@ mvn clean install
 Edit the `config.properties` or `testng.xml` file to update:
 - Base URLs
 - Browser type
+- Encrypted user id and password 
+
+use CryptoUtil to encrypt/decrypt 
 
 ---
+### 🔐 CryptoUtil – Usage Instructions
 
+The CryptoUtil class provides simple encryption and decryption capabilities using the Jasypt library.
+
+📦 Prerequisites
+Java 8 or higher
+Jasypt dependency (include in your pom.xml for Maven):
+<dependency>
+    <groupId>org.jasypt</groupId>
+    <artifactId>jasypt</artifactId>
+    <version>1.9.3</version>
+</dependency>
+⚙️ Supported Operations
+
+Encrypt a plaintext string
+Decrypt an encrypted string (Jasypt format)
+🚀 How to Use
+
+✅ Set Secret Key
+The utility requires a secret key, which can be provided via an environment variable or passed as an argument.
+
+# Linux/macOS
+export JASYPT_SECRET=mySecretKey
+
+# Windows CMD
+set JASYPT_SECRET=mySecretKey
+🔒 Encrypt a Value
+java CryptoUtil encrypt mySecretValue
+Output:
+
+Encrypted: ENC(Ad98gLk89jH=)
+⚠️ The result is automatically wrapped in ENC(...) to match common usage in configuration files.
+
+Decrypt a Value
+java CryptoUtil decrypt Ad98gLk89jH=
+
+Output:
+
+Decrypted: mySecretValue
+⚠️ When decrypting, do not include the ENC() wrapper — only pass the internal encrypted string.
+---
 ## ▶️ Running Tests
 
 ### Using Maven:
@@ -133,7 +176,7 @@ mvn allure:report
 ## 📁 Project Structure
 
 ```
-booking-platform-automation/
+UI-automation/
 │
 ├── src/
 │   ├── main/
@@ -143,11 +186,9 @@ booking-platform-automation/
 │   │   │   ├── model/               # POJO models (Booking, BookingDates, Room, etc.)
 │   │   │   ├── pages/               # Page Object Model classes (HomePage, BookingPage, etc.)
 │   │   │   ├── utils/               # Utilities (ConfigReader, CryptoUtil, ExcelReader, etc.)
-│   │   │   
 │   │   │
 │   │   └── resources/
 │   │       ├── config.properties    # Configurations & encrypted credentials
-│   │       ├── log4j2.xml           # Logging configuration
 │   │       └── roomData.xlsx        # Test data for rooms and bookings
 │   │
 │   └── test/
@@ -200,27 +241,7 @@ booking-platform-automation/
 
 See `pom.xml` for the complete list.
 
-## Test Design Explanation
 
-
-
-### UI Test Selection and Design
-
-
-### API Test Selection and Design
-
-
-
-### Using TestNG to Organize Tests
-
-I use TestNG features to keep everything running smoothly:
-
-- I assign priorities so the most important tests run first.
-- I set dependencies so tests run in the right order (like making sure login happens before creating room).
-- I run safe tests in parallel to speed things up.
-- I group tests logically (UI vs API) so you can run just the tests you need.
-
-### Summary
 
 
 
